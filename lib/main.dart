@@ -116,6 +116,8 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
         successClick = true;
         _currentList.removeAt(indexCurrentList);
         _howFull -= boxData.listOfDurations[indexData];
+        print(_howFull);
+        print(_currentList);
       });
     };
   }
@@ -150,10 +152,11 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                                 child: Row(
                                   children: [
                                     for (var i in _currentList)
-                                      RaisedButton(
-                                        onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
-                                        padding: EdgeInsets.all(0),
-                                        child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                      RawMaterialButton(
+                                          constraints: BoxConstraints(),
+                                          onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
+                                          child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                          padding: EdgeInsets.all(0.0),
                                       )
                                   ],
                                 )
@@ -204,7 +207,8 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                                 child: Row(
                                   children: [
                                     for (var i in _currentList)
-                                      RaisedButton(
+                                      RawMaterialButton(
+                                        constraints: BoxConstraints(),
                                         onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
                                         padding: EdgeInsets.all(0),
                                         child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
@@ -244,9 +248,7 @@ class _FirstPageWidgetState extends State<FirstPage> {
   var successClick = false;
   Widget build(BuildContext context) {
       Function _addRhythm(int index, Data boxData) {
-        if (boxData.listOfDurations[index] + _howFull > boxData.maxFull) {
-          return null;
-        } else {
+        if (boxData.listOfDurations[index] + _howFull <= boxData.maxFull) {
           return () {
             setState(() {
               successClick = true;
@@ -271,7 +273,8 @@ class _FirstPageWidgetState extends State<FirstPage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var index in boxData.listOfContainers)
-                            RaisedButton(
+                            RawMaterialButton(
+                              constraints: BoxConstraints(),
                               padding: EdgeInsets.all(0),
                               onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
                               child: index,
@@ -344,7 +347,8 @@ class _FirstPageWidgetState extends State<FirstPage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var index in boxData.listOfContainers)
-                            RaisedButton(
+                            RawMaterialButton(
+                              constraints: BoxConstraints(),
                               padding: EdgeInsets.all(0),
                               onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
                               child: index,
