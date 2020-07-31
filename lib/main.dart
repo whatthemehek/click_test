@@ -116,8 +116,7 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
         successClick = true;
         _currentList.removeAt(indexCurrentList);
         _howFull -= boxData.listOfDurations[indexData];
-        print(_howFull);
-        print(_currentList);
+        print("how full after remove: " + _howFull.toString());
       });
     };
   }
@@ -248,15 +247,18 @@ class _FirstPageWidgetState extends State<FirstPage> {
   var successClick = false;
   Widget build(BuildContext context) {
       Function _addRhythm(int index, Data boxData) {
-        if (boxData.listOfDurations[index] + _howFull <= boxData.maxFull) {
-          return () {
-            setState(() {
-              successClick = true;
+        print("duration clicked: " + boxData.listOfDurations[index].toString());
+        print("current full: " + _howFull.toString());
+        return () {
+          setState(() {
+            successClick = true;
+            if (boxData.listOfDurations[index] + _howFull <= boxData.maxFull) {
               _currentList.add(boxData.listOfColors[index]);
               _howFull += boxData.listOfDurations[index];
-            });
-          };
-        }
+              print("how full after add: " + _howFull.toString());
+            }
+          });
+        };
       }
       if (successClick) {
         return Scaffold(
