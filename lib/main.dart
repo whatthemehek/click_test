@@ -151,11 +151,14 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                                 child: Row(
                                   children: [
                                     for (var i in _currentList)
-                                      RawMaterialButton(
-                                          constraints: BoxConstraints(),
-                                          onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
-                                          child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
-                                          padding: EdgeInsets.all(0.0),
+                                      Container (
+                                          width: boxData.listOfWidths[boxData.listOfColors.indexOf(i)]*n,
+                                          height:(boxData.boxHeight - 4)*n,
+                                          child: RawMaterialButton(
+                                            onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
+                                            padding: EdgeInsets.all(0),
+                                            child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                          )
                                       )
                                   ],
                                 )
@@ -206,11 +209,14 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                                 child: Row(
                                   children: [
                                     for (var i in _currentList)
-                                      RawMaterialButton(
-                                        constraints: BoxConstraints(),
-                                        onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
-                                        padding: EdgeInsets.all(0),
-                                        child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                      Container (
+                                          width: boxData.listOfWidths[boxData.listOfColors.indexOf(i)]*n,
+                                          height:(boxData.boxHeight - 4)*n,
+                                          child: RawMaterialButton(
+                                            onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
+                                            padding: EdgeInsets.all(0),
+                                            child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                          )
                                       )
                                   ],
                                 )
@@ -275,12 +281,15 @@ class _FirstPageWidgetState extends State<FirstPage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var index in boxData.listOfContainers)
-                            RawMaterialButton(
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.all(0),
-                              onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
-                              child: index,
-                            ),
+                            Container (
+                              width: boxData.listOfWidths[boxData.listOfContainers.indexOf(index)]*n,
+                              height:(boxData.boxHeight - 4)*n,
+                              child: RawMaterialButton(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
+                                  child: index,
+                              ),
+                            )
                         ]
                     )
                 ),
@@ -349,12 +358,15 @@ class _FirstPageWidgetState extends State<FirstPage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var index in boxData.listOfContainers)
-                            RawMaterialButton(
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.all(0),
-                              onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
-                              child: index,
-                            ),
+                            Container (
+                              width: boxData.listOfWidths[boxData.listOfContainers.indexOf(index)]*n,
+                              height:(boxData.boxHeight - 4)*n,
+                              child: RawMaterialButton(
+                                padding: EdgeInsets.all(0),
+                                onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
+                                child: index,
+                              ),
+                            )
                         ]
                     )
                 ),
