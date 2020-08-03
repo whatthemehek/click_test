@@ -157,7 +157,8 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                                           child: RawMaterialButton(
                                             onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
                                             padding: EdgeInsets.all(0),
-                                            child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                            child: Tooltip(message: boxData.listOfNames[boxData.listOfColors.indexOf(i)],
+                                                    child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)]),
                                           )
                                       )
                                   ],
@@ -215,7 +216,8 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                                           child: RawMaterialButton(
                                             onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
                                             padding: EdgeInsets.all(0),
-                                            child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                            child: Tooltip(message: boxData.listOfNames[boxData.listOfColors.indexOf(i)],
+                                                    child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)])
                                           )
                                       )
                                   ],
@@ -287,7 +289,8 @@ class _FirstPageWidgetState extends State<FirstPage> {
                               child: RawMaterialButton(
                                   padding: EdgeInsets.all(0),
                                   onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
-                                  child: index,
+                                  child: Tooltip(message: boxData.listOfNames[boxData.listOfContainers.indexOf(index)],
+                                    child: index),
                               ),
                             )
                         ]
@@ -364,7 +367,8 @@ class _FirstPageWidgetState extends State<FirstPage> {
                               child: RawMaterialButton(
                                 padding: EdgeInsets.all(0),
                                 onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
-                                child: index,
+                                child: Tooltip(message: boxData.listOfNames[boxData.listOfContainers.indexOf(index)],
+                                  child: index),
                               ),
                             )
                         ]
