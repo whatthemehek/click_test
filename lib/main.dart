@@ -39,6 +39,46 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class BackgroundWidget extends StatefulWidget {
+  @override
+  //BackgroundWidget({Key key}) : super(key: key);
+  final Data boxData;
+  BackgroundWidget({this.boxData});
+  _BackgroundWidgetState createState() => _BackgroundWidgetState(boxData: boxData);
+  Widget build(BuildContext context) {
+
+  }
+}
+class _BackgroundWidgetState extends State<BackgroundWidget> {
+  final Data boxData;
+  _BackgroundWidgetState({this.boxData});
+  @override
+  bool successfulDrop;
+  Widget build(BuildContext context) {
+    return DragTarget<int>(
+      builder: (BuildContext context, List<int> incoming, List rejected) {
+        if (successfulDrop == true) {
+          return MeasureBoxWidget(boxData: boxData);
+        } else {
+          return MeasureBoxWidget(boxData: boxData);
+        }
+      },
+
+      onAccept: (data) {
+        setState(() {
+          successfulDrop = true;
+          _howFull = _howFull - boxData.listOfDurations[boxData.listOfColors.indexOf(_currentList[data])];
+          _currentList.removeAt(data);
+        });
+      },
+      onLeave: (data) {
+
+      },
+
+    );
+  }
+}
+
 class MeasureBoxWidget extends StatefulWidget {
   final Data boxData;
   MeasureBoxWidget({this.boxData});
@@ -80,7 +120,6 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
   _MBWidgetState({this.boxData});
   @override
   bool isButtonEnabled;
-  var successClick = false;
   Function _enableButton() {
     isButtonEnabled = (_howFull == boxData.maxFull);
     if (isButtonEnabled) {
@@ -113,16 +152,15 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
   Function _removeRhythm(int indexCurrentList, int indexData) {
     return () {
       setState(() {
-        successClick = true;
+        isAccessible = true;
         _currentList.removeAt(indexCurrentList);
         _howFull -= boxData.listOfDurations[indexData];
-        print("how full after remove: " + _howFull.toString());
       });
     };
   }
 
   Widget build(BuildContext context) {
-    if (successClick) {
+    if (isAccessible) {
       return Container(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -150,15 +188,15 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
                             child: Center(
                                 child: Row(
                                   children: [
-                                    for (var i in _currentList)
+                                    for (int i = 0; i < _currentList.length; i++)
                                       Container (
-                                          width: boxData.listOfWidths[boxData.listOfColors.indexOf(i)]*n,
+                                          width: boxData.listOfWidths[boxData.listOfColors.indexOf(_currentList[i])]*n,
                                           height:(boxData.boxHeight - 4)*n,
                                           child: RawMaterialButton(
-                                            onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
+                                            onPressed: _removeRhythm(i, boxData.listOfColors.indexOf(_currentList[i])),
                                             padding: EdgeInsets.all(0),
-                                            child: Tooltip(message: boxData.listOfNames[boxData.listOfColors.indexOf(i)],
-                                                    child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)]),
+                                            child: Tooltip(message: boxData.listOfNames[boxData.listOfColors.indexOf(_currentList[i])],
+                                                    child: boxData.listOfContainers[boxData.listOfColors.indexOf(_currentList[i])]),
                                           )
                                       )
                                   ],
@@ -182,63 +220,77 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
           )
       );
     } else {
-      return Container(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Center(
-                  //Draws the box, with the right size
-                    child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                        ),
-                        child: Container(
-                            height: boxData.boxHeight * n,
-                            width: boxData.boxWidth * n,
-                            decoration: BoxDecoration(
-                              color: Color(0xc9c9c9),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2 * n,
-                              ),
+      return DragTarget<Color>(
+        builder: (BuildContext context, List<Color> incoming, List rejected) {
+            return Column (
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Center (
+                    //Draws the box, with the right size
+                      child: Container (
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
                             ),
-                            // Draws the blocks currently in the box
-                            child: Center(
-                                child: Row(
-                                  children: [
-                                    for (var i in _currentList)
-                                      Container (
-                                          width: boxData.listOfWidths[boxData.listOfColors.indexOf(i)]*n,
-                                          height:(boxData.boxHeight - 4)*n,
-                                          child: RawMaterialButton(
-                                            onPressed: _removeRhythm(_currentList.indexOf(i), boxData.listOfColors.indexOf(i)),
-                                            padding: EdgeInsets.all(0),
-                                            child: Tooltip(message: boxData.listOfNames[boxData.listOfColors.indexOf(i)],
-                                                    child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)])
-                                          )
-                                      )
-                                  ],
-                                )
-                            )
-                        )
-                    )
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  child: IconButton(
-                    iconSize: 80.0,
-                    icon: Icon(Icons.play_circle_filled),
-                    color: Colors.blue,
-                    disabledColor: Colors.grey,
-                    onPressed: _enableButton(),
-                    tooltip: "Play Rhythm",
+                          ),
+                          child: Container (
+                              height: boxData.boxHeight*n,
+                              width: boxData.boxWidth*n,
+                              decoration: BoxDecoration(
+                                color: Color(0xc9c9c9),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2*n,
+                                ),
+                              ),
+                              // Draws the blocks currently in the box
+                              child: Center (
+                                  child: Row(
+                                    children: [
+                                      for (var i in _currentList)
+                                        Draggable(
+                                          child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                          feedback: Material (
+                                            child: boxData.listOfContainers[boxData.listOfColors.indexOf(i)],
+                                          ),
+                                          childWhenDragging: null,
+                                          data: (_currentList.indexOf(i)),
+                                        ),
+                                    ],
+                                  )
+                              )
+                          )
+                      )
                   ),
-                )
-              ]
-          )
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20.0),
+                    child: IconButton (
+                      iconSize: 80.0,
+                      icon: Icon(Icons.play_circle_filled),
+                      color: Colors.blue,
+                      disabledColor: Colors.grey,
+                      onPressed: _enableButton(),
+                      tooltip: "Play Rhythm",
+                    ),
+                  )
+                ]
+            );
+          },
+
+        onWillAccept: (data) => boxData.listOfDurations[boxData.listOfColors.indexOf(data)] + _howFull <= boxData.maxFull,
+
+        onAccept: (data) {
+          setState(() {
+            isAccessible = false;
+            _howFull = boxData.listOfDurations[boxData.listOfColors.indexOf(data)] + _howFull;
+            _currentList.add(data);
+          });
+        },
+        onLeave: (data) {
+
+        },
+
       );
     }
   }
@@ -246,29 +298,25 @@ class _MBWidgetState extends State<MeasureBoxWidget> {
 
 //Compose Page
 var _currentList = [];
-
+var isAccessible = false;
 
 class _FirstPageWidgetState extends State<FirstPage> {
   final Data boxData;
   _FirstPageWidgetState({this.boxData});
   @override
-  var successClick = false;
   Widget build(BuildContext context) {
       Function _addRhythm(int index, Data boxData) {
-        print("duration clicked: " + boxData.listOfDurations[index].toString());
-        print("current full: " + _howFull.toString());
         return () {
           setState(() {
-            successClick = true;
+            isAccessible = true;
             if (boxData.listOfDurations[index] + _howFull <= boxData.maxFull) {
               _currentList.add(boxData.listOfColors[index]);
               _howFull += boxData.listOfDurations[index];
-              print("how full after add: " + _howFull.toString());
             }
           });
         };
       }
-      if (successClick) {
+      if (isAccessible) {
         return Scaffold(
           appBar: AppBar(
             title: Text(boxData.boxType+' Box'),
@@ -342,6 +390,15 @@ class _FirstPageWidgetState extends State<FirstPage> {
                     Navigator.pushNamed(context, '/privacy');
                   },
                 ),
+                SwitchListTile(
+                  title: Text('Screen-reader Optimized'),
+                  value: isAccessible,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isAccessible = value;
+                    });
+                  },
+                )
               ],
             ),
           ),
@@ -361,15 +418,14 @@ class _FirstPageWidgetState extends State<FirstPage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var index in boxData.listOfContainers)
-                            Container (
-                              width: boxData.listOfWidths[boxData.listOfContainers.indexOf(index)]*n,
-                              height:(boxData.boxHeight - 4)*n,
-                              child: RawMaterialButton(
-                                padding: EdgeInsets.all(0),
-                                onPressed: _addRhythm(boxData.listOfContainers.indexOf(index), boxData),
-                                child: Tooltip(message: boxData.listOfNames[boxData.listOfContainers.indexOf(index)],
-                                  child: index),
+                            Draggable<Color>(
+                              child: index,
+                              feedback: Material(
+                                child: index,
                               ),
+                              childWhenDragging: index,
+                              data: boxData.listOfColors[boxData.listOfContainers.indexOf(index)],
+                              affinity: Axis.vertical,
                             )
                         ]
                     )
@@ -377,7 +433,7 @@ class _FirstPageWidgetState extends State<FirstPage> {
                 Expanded(
                     child: Container(
                       color: Color(0xffe4e1),
-                      child: MeasureBoxWidget(boxData: boxData),
+                      child: BackgroundWidget(boxData: boxData),
                     )
                 ),
               ]// Children
@@ -420,6 +476,15 @@ class _FirstPageWidgetState extends State<FirstPage> {
                     Navigator.pushNamed(context, '/privacy');
                   },
                 ),
+                SwitchListTile(
+                  title: Text('Screen-reader Optimized'),
+                  value: isAccessible,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isAccessible = value;
+                    });
+                  },
+                )
               ],
             ),
           ),
